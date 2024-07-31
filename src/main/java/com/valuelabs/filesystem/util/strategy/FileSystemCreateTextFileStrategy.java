@@ -1,7 +1,6 @@
 package com.valuelabs.filesystem.util.strategy;
 
 import com.valuelabs.filesystem.exception.IllegalFileSystemOperationException;
-import com.valuelabs.filesystem.exception.NonATextFileException;
 import com.valuelabs.filesystem.exception.PathAlreadyExistsException;
 import com.valuelabs.filesystem.exception.PathNotFoundException;
 import com.valuelabs.filesystem.model.BaseFileSystemModel;
