@@ -8,7 +8,7 @@ public enum FileSystemType {
 
    public final String label;
 
-   private FileSystemType(String label) {
+   FileSystemType(String label) {
       this.label = label;
    }
 }

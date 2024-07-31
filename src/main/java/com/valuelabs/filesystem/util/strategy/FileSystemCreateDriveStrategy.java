@@ -1,7 +1,6 @@
 package com.valuelabs.filesystem.util.strategy;
 
 import com.valuelabs.filesystem.exception.IllegalFileSystemOperationException;
-import com.valuelabs.filesystem.exception.NonATextFileException;
 import com.valuelabs.filesystem.exception.PathAlreadyExistsException;
 import com.valuelabs.filesystem.model.BaseFileSystemModel;
 import com.valuelabs.filesystem.model.Drive;
@@ -16,7 +15,7 @@ public class FileSystemCreateDriveStrategy extends FileSystemCreateStrategy {
 
    @Override
    public void validate(String name, String pathOfParent)
-         throws PathAlreadyExistsException, IllegalFileSystemOperationException, NonATextFileException {
+         throws PathAlreadyExistsException, IllegalFileSystemOperationException {
       fileSystemValidationHelper.validatePathAlreadyExists(name, pathOfParent);
       fileSystemValidationHelper.validateTextFileDoesNotContainAnyOtherEntity(pathOfParent);
       fileSystemValidationHelper.validateDriveIsNotContainedInAnyEntity(pathOfParent);

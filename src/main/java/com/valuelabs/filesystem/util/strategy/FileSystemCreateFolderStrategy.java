@@ -1,7 +1,6 @@
 package com.valuelabs.filesystem.util.strategy;
 
 import com.valuelabs.filesystem.exception.IllegalFileSystemOperationException;
-import com.valuelabs.filesystem.exception.NonATextFileException;
 import com.valuelabs.filesystem.exception.PathAlreadyExistsException;
 import com.valuelabs.filesystem.exception.PathNotFoundException;
 import com.valuelabs.filesystem.model.BaseFileSystemModel;
@@ -17,7 +16,7 @@ public class FileSystemCreateFolderStrategy extends FileSystemCreateStrategy {
 
    @Override
    public void validate(String name, String pathOfParent)
-         throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException, NonATextFileException {
+         throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
 
       fileSystemValidationHelper.validatePathNotFound(pathOfParent);
       fileSystemValidationHelper.validatePathAlreadyExists(name, pathOfParent);

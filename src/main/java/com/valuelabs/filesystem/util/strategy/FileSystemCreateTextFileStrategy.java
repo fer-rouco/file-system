@@ -17,7 +17,7 @@ public class FileSystemCreateTextFileStrategy extends FileSystemCreateStrategy {
 
    @Override
    public void validate(String name, String pathOfParent)
-         throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException, NonATextFileException {
+         throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
 
       fileSystemValidationHelper.validatePathNotFound(pathOfParent);
       fileSystemValidationHelper.validatePathAlreadyExists(name, pathOfParent);
@@ -25,8 +25,7 @@ public class FileSystemCreateTextFileStrategy extends FileSystemCreateStrategy {
    }
 
    @Override
-   public BaseFileSystemModel create(String name, String pathOfParent)
-      throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException, NonATextFileException {
+   public BaseFileSystemModel create(String name, String pathOfParent) {
       return new TextFile();
    }
 
