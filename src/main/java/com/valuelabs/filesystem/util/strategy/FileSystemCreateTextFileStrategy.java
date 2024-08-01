@@ -7,8 +7,6 @@ import com.valuelabs.filesystem.model.BaseFileSystemModel;
 import com.valuelabs.filesystem.model.TextFile;
 import com.valuelabs.filesystem.util.FileSystemUtil;
 
-import java.util.Map;
-
 public class FileSystemCreateTextFileStrategy extends FileSystemCreateStrategy {
 
    public FileSystemCreateTextFileStrategy(FileSystemUtil fileSystemUtil) {
@@ -29,11 +27,6 @@ public class FileSystemCreateTextFileStrategy extends FileSystemCreateStrategy {
       TextFile textFile = new TextFile();
       textFile.setSize(textFile.size());
       return textFile;
-   }
-
-   @Override
-   public int calculateSize(String pathOfParent) {
-      return 0;
    }
 
 }

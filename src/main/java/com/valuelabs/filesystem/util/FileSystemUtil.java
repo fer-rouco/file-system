@@ -7,6 +7,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 @Getter
@@ -31,15 +32,22 @@ public class FileSystemUtil {
    }
 
    public Map<String, BaseFileSystemModel> getChildren(String pathOfParent) {
-      return ((TreeMap<String, BaseFileSystemModel>) this.inMemoryFileSystem).subMap(pathOfParent + "/", pathOfParent + "/" + "\uFFFF");
+      return ((TreeMap<String, BaseFileSystemModel>) inMemoryFileSystem).subMap(pathOfParent + "/", pathOfParent + "/" + "\uFFFF");
    }
 
    public int calculateSize(String pathOfParent) {
-      return getChildren(pathOfParent)
+      int sizeOfParent = getChildren(pathOfParent)
             .values()
             .stream()
             .mapToInt(BaseFileSystemModel::getSize)
             .sum();
+      return (getType(pathOfParent) == FileSystemType.ZIP_FILE) ? (sizeOfParent / 2) : sizeOfParent;
+   }
+
+   public void calculateAndUpdateSize(String... pathOfParent) {
+      for (String path : pathOfParent) {
+         Optional.ofNullable(inMemoryFileSystem.get(path)).ifPresent(entity -> entity.setSize(calculateSize(path)));
+      }
    }
 
    public FileSystemType getType(String path) {
@@ -47,7 +55,7 @@ public class FileSystemUtil {
    }
 
    public String getTypeAsString(String path) {
-      return switch (inMemoryFileSystem.get(path).getType()) {
+      return switch (getType(path)) {
          case DRIVE -> "drive";
          case FOLDER -> "folder";
          case ZIP_FILE -> "zip file";
@@ -55,7 +63,7 @@ public class FileSystemUtil {
       };
    }
 
-   public BaseFileSystemModel remove(String path) {
-      return inMemoryFileSystem.remove(path);
+   public void remove(String path) {
+      inMemoryFileSystem.remove(path);
    }
 }

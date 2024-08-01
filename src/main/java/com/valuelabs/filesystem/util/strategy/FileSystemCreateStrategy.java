@@ -25,14 +25,7 @@ public abstract class FileSystemCreateStrategy {
    public BaseFileSystemModel validateAndCreate(String name, String pathOfParent)
       throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
 
-      this.validate(name, pathOfParent);
-      BaseFileSystemModel baseFileSystemModel = this.create(name, pathOfParent);
-      baseFileSystemModel.setSize(this.calculateSize(pathOfParent));
-
-      return baseFileSystemModel;
-   }
-
-   public int calculateSize(String pathOfParent) {
-      return fileSystemUtil.calculateSize(pathOfParent);
+      validate(name, pathOfParent);
+      return create(name, pathOfParent);
    }
 }

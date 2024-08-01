@@ -13,7 +13,7 @@ public abstract class BaseFileSystemModel {
    private int size;
 
    public void buildPath(String basePath, String name) {
-      this.setPath(basePath + ((!Strings.isEmpty(name)) ? "/" + name : ""));
+      setPath(basePath + ((!Strings.isEmpty(name)) ? "/" + name : ""));
    }
 
    @Override

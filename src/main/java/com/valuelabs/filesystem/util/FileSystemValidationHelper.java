@@ -20,23 +20,23 @@ public class FileSystemValidationHelper {
    }
 
    public void validatePathNotFound(String path) throws PathNotFoundException {
-      if (this.inMemoryFileSystem.get(path) == null) {
+      if (inMemoryFileSystem.get(path) == null) {
          throw new PathNotFoundException(path);
       }
    }
 
    public void validatePathAlreadyExists(String path) throws PathAlreadyExistsException {
-      if (this.inMemoryFileSystem.get(path) != null) {
+      if (inMemoryFileSystem.get(path) != null) {
          throw new PathAlreadyExistsException(path);
       }
    }
 
    public void validatePathAlreadyExists(String name, String pathOfParent) throws PathAlreadyExistsException {
-      this.validatePathAlreadyExists(pathOfParent + "/" + name);
+      validatePathAlreadyExists(pathOfParent + "/" + name);
    }
 
    public void validateTextFileDoesNotContainAnyOtherEntity(String pathOfParent) throws IllegalFileSystemOperationException {
-      BaseFileSystemModel fileSystemModel = this.inMemoryFileSystem.get(pathOfParent);
+      BaseFileSystemModel fileSystemModel = inMemoryFileSystem.get(pathOfParent);
       if (fileSystemModel != null && fileSystemModel.getType() == FileSystemType.TEXT_FILE) {
          throw new IllegalFileSystemOperationException("Text file does not contain any other entity.");
       }
@@ -49,7 +49,7 @@ public class FileSystemValidationHelper {
    }
 
    public void validateNonATextFile(String path) throws NonATextFileException {
-      BaseFileSystemModel fileSystemModel = this.inMemoryFileSystem.get(path);
+      BaseFileSystemModel fileSystemModel = inMemoryFileSystem.get(path);
       if (fileSystemModel != null && fileSystemModel.getType() != FileSystemType.TEXT_FILE) {
          throw new NonATextFileException(path);
       }

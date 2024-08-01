@@ -7,8 +7,6 @@ import com.valuelabs.filesystem.model.BaseFileSystemModel;
 import com.valuelabs.filesystem.model.Folder;
 import com.valuelabs.filesystem.util.FileSystemUtil;
 
-import java.util.Map;
-
 public class FileSystemCreateFolderStrategy extends FileSystemCreateStrategy {
 
    public FileSystemCreateFolderStrategy(FileSystemUtil fileSystemUtil) {

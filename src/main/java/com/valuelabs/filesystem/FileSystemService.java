@@ -34,7 +34,7 @@ public class FileSystemService {
       this.fileSystemValidationHelper = fileSystemUtil.getValidatorHelper();
 
       BaseFileSystemModel rootFileSystemObject = fileSystemFactory.create(FileSystemType.FOLDER, "root", "", true);
-      this.inMemoryFileSystem.put(rootFileSystemObject.getPath(), rootFileSystemObject);
+      inMemoryFileSystem.put(rootFileSystemObject.getPath(), rootFileSystemObject);
    }
 
    public List<BaseFileSystemModel> get() {
@@ -44,20 +44,21 @@ public class FileSystemService {
    public BaseFileSystemModel create(FileSystemType type, String name, String pathOfParent)
       throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
       BaseFileSystemModel fileSystemObject = fileSystemFactory.create(type, name, pathOfParent);
-      this.inMemoryFileSystem.put(fileSystemObject.getPath(), fileSystemObject);
+      inMemoryFileSystem.put(fileSystemObject.getPath(), fileSystemObject);
       return fileSystemObject;
    }
 
    public String delete(String path) throws PathNotFoundException {
       fileSystemValidationHelper.validatePathNotFound(path);
-      String returnMessage = MessageFormat.format("The {0} {1} was deleted successfully.", fileSystemUtil.getTypeAsString(path), path);
+      String type = fileSystemUtil.getTypeAsString(path);
       fileSystemUtil.getChildren(path)
          .keySet()
          .stream()
          .toList()
          .forEach(fileSystemUtil::remove);
       fileSystemUtil.remove(path);
-      return returnMessage;
+      fileSystemUtil.calculateAndUpdateSize(path);
+      return MessageFormat.format("The {0} {1} was deleted successfully.", type, path);
    }
 
    public BaseFileSystemModel move(String sourcePath, String destinationPath)
@@ -65,8 +66,9 @@ public class FileSystemService {
       fileSystemValidationHelper.validatePathNotFound(sourcePath);
       BaseFileSystemModel entityToRemove = inMemoryFileSystem.get(sourcePath);
       BaseFileSystemModel newEntity = fileSystemFactory.create(entityToRemove.getType(), entityToRemove.getName(), destinationPath);
-      this.inMemoryFileSystem.put(newEntity.getPath(), newEntity);
+      inMemoryFileSystem.put(newEntity.getPath(), newEntity);
       inMemoryFileSystem.remove(sourcePath);
+      fileSystemUtil.calculateAndUpdateSize(destinationPath);
       return newEntity;
    }
 
@@ -76,6 +78,9 @@ public class FileSystemService {
       TextFile textFile = (TextFile) inMemoryFileSystem.get(path);
       textFile.setContent(content);
       textFile.setSize(textFile.size());
+      int indexOfLastPathSeparator = path.lastIndexOf("/");
+      String pathOfParent = (indexOfLastPathSeparator > 0) ? path.substring(0, indexOfLastPathSeparator) : null;
+      fileSystemUtil.calculateAndUpdateSize(pathOfParent);
       return textFile;
    }
 }
