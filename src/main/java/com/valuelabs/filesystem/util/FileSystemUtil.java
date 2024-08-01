@@ -30,12 +30,32 @@ public class FileSystemUtil {
       };
    }
 
+   public Map<String, BaseFileSystemModel> getChildren(String pathOfParent) {
+      return ((TreeMap<String, BaseFileSystemModel>) this.inMemoryFileSystem).subMap(pathOfParent + "/", pathOfParent + "/" + "\uFFFF");
+   }
+
    public int calculateSize(String pathOfParent) {
-      Map<String, BaseFileSystemModel> subMap = ((TreeMap<String, BaseFileSystemModel>) this.inMemoryFileSystem).subMap(pathOfParent + "/", pathOfParent + "/" + "\uFFFF");
-      return subMap
+      return getChildren(pathOfParent)
             .values()
             .stream()
             .mapToInt(BaseFileSystemModel::getSize)
             .sum();
+   }
+
+   public FileSystemType getType(String path) {
+      return inMemoryFileSystem.get(path).getType();
+   }
+
+   public String getTypeAsString(String path) {
+      return switch (inMemoryFileSystem.get(path).getType()) {
+         case DRIVE -> "drive";
+         case FOLDER -> "folder";
+         case ZIP_FILE -> "zip file";
+         case TEXT_FILE -> "text file";
+      };
+   }
+
+   public BaseFileSystemModel remove(String path) {
+      return inMemoryFileSystem.remove(path);
    }
 }

@@ -34,7 +34,7 @@ public class FileSystemController {
    }
 
    @DeleteMapping
-   public BaseFileSystemModel delete(@RequestParam String path) throws PathNotFoundException {
+   public String delete(@RequestParam String path) throws PathNotFoundException {
       return fileSystemService.delete(path);
    }
 

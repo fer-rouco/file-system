@@ -12,6 +12,7 @@ import com.valuelabs.filesystem.util.FileSystemUtil;
 import com.valuelabs.filesystem.util.FileSystemValidationHelper;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -47,9 +48,16 @@ public class FileSystemService {
       return fileSystemObject;
    }
 
-   public BaseFileSystemModel delete(String path) throws PathNotFoundException {
+   public String delete(String path) throws PathNotFoundException {
       fileSystemValidationHelper.validatePathNotFound(path);
-      return inMemoryFileSystem.remove(path);
+      String returnMessage = MessageFormat.format("The {0} {1} was deleted successfully.", fileSystemUtil.getTypeAsString(path), path);
+      fileSystemUtil.getChildren(path)
+         .keySet()
+         .stream()
+         .toList()
+         .forEach(fileSystemUtil::remove);
+      fileSystemUtil.remove(path);
+      return returnMessage;
    }
 
    public BaseFileSystemModel move(String sourcePath, String destinationPath)
