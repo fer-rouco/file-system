@@ -5,13 +5,14 @@ import com.valuelabs.filesystem.exception.PathAlreadyExistsException;
 import com.valuelabs.filesystem.exception.PathNotFoundException;
 import com.valuelabs.filesystem.model.BaseFileSystemModel;
 import com.valuelabs.filesystem.model.Folder;
+import com.valuelabs.filesystem.util.FileSystemUtil;
 
 import java.util.Map;
 
 public class FileSystemCreateFolderStrategy extends FileSystemCreateStrategy {
 
-   public FileSystemCreateFolderStrategy(Map<String, BaseFileSystemModel> inMemoryFileSystem) {
-      super(inMemoryFileSystem);
+   public FileSystemCreateFolderStrategy(FileSystemUtil fileSystemUtil) {
+      super(fileSystemUtil);
    }
 
    @Override

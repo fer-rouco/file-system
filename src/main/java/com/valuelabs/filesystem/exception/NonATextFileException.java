@@ -1,7 +1,9 @@
 package com.valuelabs.filesystem.exception;
 
+import java.text.MessageFormat;
+
 public class NonATextFileException extends Exception {
-   public NonATextFileException() {
-      super("Non a text file exception.");
+   public NonATextFileException(String path) {
+      super(MessageFormat.format("The path {0} is not a text file exception.", path));
    }
 }

@@ -21,13 +21,13 @@ public class FileSystemValidationHelper {
 
    public void validatePathNotFound(String path) throws PathNotFoundException {
       if (this.inMemoryFileSystem.get(path) == null) {
-         throw new PathNotFoundException();
+         throw new PathNotFoundException(path);
       }
    }
 
    public void validatePathAlreadyExists(String path) throws PathAlreadyExistsException {
       if (this.inMemoryFileSystem.get(path) != null) {
-         throw new PathAlreadyExistsException();
+         throw new PathAlreadyExistsException(path);
       }
    }
 
@@ -51,7 +51,7 @@ public class FileSystemValidationHelper {
    public void validateNonATextFile(String path) throws NonATextFileException {
       BaseFileSystemModel fileSystemModel = this.inMemoryFileSystem.get(path);
       if (fileSystemModel != null && fileSystemModel.getType() != FileSystemType.TEXT_FILE) {
-         throw new NonATextFileException();
+         throw new NonATextFileException(path);
       }
    }
 }

@@ -5,13 +5,14 @@ import com.valuelabs.filesystem.exception.PathAlreadyExistsException;
 import com.valuelabs.filesystem.exception.PathNotFoundException;
 import com.valuelabs.filesystem.model.BaseFileSystemModel;
 import com.valuelabs.filesystem.model.TextFile;
+import com.valuelabs.filesystem.util.FileSystemUtil;
 
 import java.util.Map;
 
 public class FileSystemCreateTextFileStrategy extends FileSystemCreateStrategy {
 
-   public FileSystemCreateTextFileStrategy(Map<String, BaseFileSystemModel> inMemoryFileSystem) {
-      super(inMemoryFileSystem);
+   public FileSystemCreateTextFileStrategy(FileSystemUtil fileSystemUtil) {
+      super(fileSystemUtil);
    }
 
    @Override
@@ -28,6 +29,11 @@ public class FileSystemCreateTextFileStrategy extends FileSystemCreateStrategy {
       TextFile textFile = new TextFile();
       textFile.setSize(textFile.size());
       return textFile;
+   }
+
+   @Override
+   public int calculateSize(String pathOfParent) {
+      return 0;
    }
 
 }

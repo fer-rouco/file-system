@@ -4,13 +4,12 @@ import com.valuelabs.filesystem.exception.IllegalFileSystemOperationException;
 import com.valuelabs.filesystem.exception.PathAlreadyExistsException;
 import com.valuelabs.filesystem.model.BaseFileSystemModel;
 import com.valuelabs.filesystem.model.Drive;
-
-import java.util.Map;
+import com.valuelabs.filesystem.util.FileSystemUtil;
 
 public class FileSystemCreateDriveStrategy extends FileSystemCreateStrategy {
 
-   public FileSystemCreateDriveStrategy(Map<String, BaseFileSystemModel> inMemoryFileSystem) {
-      super(inMemoryFileSystem);
+   public FileSystemCreateDriveStrategy(FileSystemUtil fileSystemUtil) {
+      super(fileSystemUtil);
    }
 
    @Override

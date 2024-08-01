@@ -29,7 +29,7 @@ public class FileSystemController {
 
    @PostMapping
    public BaseFileSystemModel create(@RequestParam FileSystemType type, @RequestParam String name, @RequestParam String pathOfParent)
-      throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException, NonATextFileException {
+      throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
       return fileSystemService.create(type, name, pathOfParent);
    }
 
@@ -40,7 +40,7 @@ public class FileSystemController {
 
    @PostMapping(path = "/move")
    public BaseFileSystemModel move(@RequestParam String sourcePath, @RequestParam String destinationPath)
-      throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException, NonATextFileException {
+      throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
       return fileSystemService.move(sourcePath, destinationPath);
    }
 

@@ -1,36 +1,28 @@
 package com.valuelabs.filesystem.util;
 
 import com.valuelabs.filesystem.exception.IllegalFileSystemOperationException;
-import com.valuelabs.filesystem.exception.NonATextFileException;
 import com.valuelabs.filesystem.exception.PathAlreadyExistsException;
 import com.valuelabs.filesystem.exception.PathNotFoundException;
 import com.valuelabs.filesystem.model.*;
 import com.valuelabs.filesystem.util.strategy.*;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
 @Component
 public class FileSystemFactory implements AbstractFileSystemFactory {
 
-   private final Map<String, BaseFileSystemModel> inMemoryFileSystem;
+   private final FileSystemUtil fileSystemUtil;
 
-   public FileSystemFactory(Map<String, BaseFileSystemModel> inMemoryFileSystem) {
-      this.inMemoryFileSystem = inMemoryFileSystem;
+   public FileSystemFactory(FileSystemUtil fileSystemUtil) {
+      this.fileSystemUtil = fileSystemUtil;
    }
 
    @Override
-   public BaseFileSystemModel create(FileSystemType type, String name, String pathOfParent, boolean skipValidations) throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException, NonATextFileException {
+   public BaseFileSystemModel create(FileSystemType type, String name, String pathOfParent, boolean skipValidations) throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
 
-      FileSystemCreateStrategy createStrategy = switch (type) {
-         case FileSystemType.DRIVE -> new FileSystemCreateDriveStrategy(inMemoryFileSystem);
-         case FileSystemType.FOLDER -> new FileSystemCreateFolderStrategy(inMemoryFileSystem);
-         case FileSystemType.TEXT_FILE -> new FileSystemCreateTextFileStrategy(inMemoryFileSystem);
-         case FileSystemType.ZIP_FILE -> new FileSystemCreateZipFileStrategy(inMemoryFileSystem);
-      };
+      FileSystemCreateStrategy strategy = fileSystemUtil.chooseStrategy(type);
 
       BaseFileSystemModel baseFileSystemModel =
-            skipValidations ? createStrategy.create(name, pathOfParent) : createStrategy.validateAndCreate(name, pathOfParent);
+            skipValidations ? strategy.create(name, pathOfParent) : strategy.validateAndCreate(name, pathOfParent);
 
       baseFileSystemModel.setType(type);
       baseFileSystemModel.setName(name);
@@ -42,7 +34,7 @@ public class FileSystemFactory implements AbstractFileSystemFactory {
 
    @Override
    public BaseFileSystemModel create(FileSystemType type, String name, String pathOfParent)
-         throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException, NonATextFileException {
+         throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
       return create(type, name, pathOfParent, false);
    }
 

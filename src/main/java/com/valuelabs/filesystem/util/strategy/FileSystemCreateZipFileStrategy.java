@@ -5,13 +5,12 @@ import com.valuelabs.filesystem.exception.PathAlreadyExistsException;
 import com.valuelabs.filesystem.exception.PathNotFoundException;
 import com.valuelabs.filesystem.model.BaseFileSystemModel;
 import com.valuelabs.filesystem.model.ZipFile;
-
-import java.util.Map;
+import com.valuelabs.filesystem.util.FileSystemUtil;
 
 public class FileSystemCreateZipFileStrategy extends FileSystemCreateStrategy {
 
-   public FileSystemCreateZipFileStrategy(Map<String, BaseFileSystemModel> inMemoryFileSystem) {
-      super(inMemoryFileSystem);
+   public FileSystemCreateZipFileStrategy(FileSystemUtil fileSystemUtil) {
+      super(fileSystemUtil);
    }
 
    @Override

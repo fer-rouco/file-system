@@ -8,6 +8,7 @@ import com.valuelabs.filesystem.model.BaseFileSystemModel;
 import com.valuelabs.filesystem.model.FileSystemType;
 import com.valuelabs.filesystem.model.TextFile;
 import com.valuelabs.filesystem.util.AbstractFileSystemFactory;
+import com.valuelabs.filesystem.util.FileSystemUtil;
 import com.valuelabs.filesystem.util.FileSystemValidationHelper;
 import org.springframework.stereotype.Service;
 
@@ -18,16 +19,18 @@ import java.util.Map;
 public class FileSystemService {
 
    private final AbstractFileSystemFactory fileSystemFactory;
+   private final FileSystemUtil fileSystemUtil;
    private final FileSystemValidationHelper fileSystemValidationHelper;
 
    private final Map<String, BaseFileSystemModel> inMemoryFileSystem;
 
-   public FileSystemService(AbstractFileSystemFactory fileSystemFactory, FileSystemValidationHelper fileSystemValidationHelper, Map<String, BaseFileSystemModel> inMemoryFileSystem)
-      throws PathAlreadyExistsException, NonATextFileException, PathNotFoundException, IllegalFileSystemOperationException {
+   public FileSystemService(AbstractFileSystemFactory fileSystemFactory, FileSystemUtil fileSystemUtil)
+      throws PathAlreadyExistsException, PathNotFoundException, IllegalFileSystemOperationException {
 
       this.fileSystemFactory = fileSystemFactory;
-      this.fileSystemValidationHelper = fileSystemValidationHelper;
-      this.inMemoryFileSystem = inMemoryFileSystem;
+      this.fileSystemUtil = fileSystemUtil;
+      this.inMemoryFileSystem = fileSystemUtil.getInMemoryFileSystem();
+      this.fileSystemValidationHelper = fileSystemUtil.getValidatorHelper();
 
       BaseFileSystemModel rootFileSystemObject = fileSystemFactory.create(FileSystemType.FOLDER, "root", "", true);
       this.inMemoryFileSystem.put(rootFileSystemObject.getPath(), rootFileSystemObject);
@@ -38,7 +41,7 @@ public class FileSystemService {
    }
 
    public BaseFileSystemModel create(FileSystemType type, String name, String pathOfParent)
-      throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException, NonATextFileException {
+      throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
       BaseFileSystemModel fileSystemObject = fileSystemFactory.create(type, name, pathOfParent);
       this.inMemoryFileSystem.put(fileSystemObject.getPath(), fileSystemObject);
       return fileSystemObject;
@@ -50,7 +53,7 @@ public class FileSystemService {
    }
 
    public BaseFileSystemModel move(String sourcePath, String destinationPath)
-      throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException, NonATextFileException {
+      throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
       fileSystemValidationHelper.validatePathNotFound(sourcePath);
       BaseFileSystemModel entityToRemove = inMemoryFileSystem.get(sourcePath);
       BaseFileSystemModel newEntity = fileSystemFactory.create(entityToRemove.getType(), entityToRemove.getName(), destinationPath);
@@ -64,6 +67,7 @@ public class FileSystemService {
       fileSystemValidationHelper.validateNonATextFile(path);
       TextFile textFile = (TextFile) inMemoryFileSystem.get(path);
       textFile.setContent(content);
+      textFile.setSize(textFile.size());
       return textFile;
    }
 }
