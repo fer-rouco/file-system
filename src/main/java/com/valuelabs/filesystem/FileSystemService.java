@@ -50,6 +50,7 @@ public class FileSystemService {
 
    public String delete(String path) throws PathNotFoundException {
       fileSystemValidationHelper.validatePathNotFound(path);
+      String pathOfParent = inMemoryFileSystem.get(path).getParentPath();
       String type = fileSystemUtil.getTypeAsString(path);
       fileSystemUtil.getChildren(path)
          .keySet()
@@ -57,7 +58,7 @@ public class FileSystemService {
          .toList()
          .forEach(fileSystemUtil::remove);
       fileSystemUtil.remove(path);
-      fileSystemUtil.calculateAndUpdateSize(path);
+      fileSystemUtil.calculateAndUpdateSize(path, pathOfParent);
       return MessageFormat.format("The {0} {1} was deleted successfully.", type, path);
    }
 
@@ -65,7 +66,7 @@ public class FileSystemService {
       throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
       fileSystemValidationHelper.validatePathNotFound(sourcePath);
       BaseFileSystemModel entityToRemove = inMemoryFileSystem.get(sourcePath);
-      BaseFileSystemModel newEntity = fileSystemFactory.create(entityToRemove.getType(), entityToRemove.getName(), destinationPath);
+      BaseFileSystemModel newEntity = fileSystemUtil.chooseStrategy(entityToRemove.getType()).validateAndClone(entityToRemove);
       inMemoryFileSystem.put(newEntity.getPath(), newEntity);
       inMemoryFileSystem.remove(sourcePath);
       fileSystemUtil.calculateAndUpdateSize(destinationPath);
@@ -78,9 +79,7 @@ public class FileSystemService {
       TextFile textFile = (TextFile) inMemoryFileSystem.get(path);
       textFile.setContent(content);
       textFile.setSize(textFile.size());
-      int indexOfLastPathSeparator = path.lastIndexOf("/");
-      String pathOfParent = (indexOfLastPathSeparator > 0) ? path.substring(0, indexOfLastPathSeparator) : null;
-      fileSystemUtil.calculateAndUpdateSize(pathOfParent);
+      fileSystemUtil.calculateAndUpdateSize(textFile.getParentPath());
       return textFile;
    }
 }

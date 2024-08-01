@@ -16,16 +16,21 @@ public abstract class FileSystemCreateStrategy {
       this.fileSystemValidationHelper = fileSystemUtil.getValidatorHelper();
    }
 
-   public abstract BaseFileSystemModel create(String name, String pathOfParent)
+   public abstract void validate(String name, String pathOfParent)
          throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException;
 
-   abstract void validate(String name, String pathOfParent)
+   public abstract BaseFileSystemModel create(String name, String pathOfParent)
          throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException;
 
    public BaseFileSystemModel validateAndCreate(String name, String pathOfParent)
       throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
-
       validate(name, pathOfParent);
       return create(name, pathOfParent);
+   }
+
+   public BaseFileSystemModel validateAndClone(BaseFileSystemModel entityToBeConed)
+      throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
+      validate(entityToBeConed.getName(), entityToBeConed.getParentPath());
+      return entityToBeConed.copy();
    }
 }

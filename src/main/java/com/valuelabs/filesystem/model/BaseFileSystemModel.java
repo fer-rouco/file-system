@@ -1,5 +1,6 @@
 package com.valuelabs.filesystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.apache.logging.log4j.util.Strings;
 
@@ -12,8 +13,16 @@ public abstract class BaseFileSystemModel {
    private String path;
    private int size;
 
+   protected abstract BaseFileSystemModel newInstance();
+
    public void buildPath(String basePath, String name) {
       setPath(basePath + ((!Strings.isEmpty(name)) ? "/" + name : ""));
+   }
+
+   @JsonIgnore
+   public String getParentPath() {
+      int indexOfLastPathSeparator = path.lastIndexOf("/");
+      return (indexOfLastPathSeparator > 0) ? path.substring(0, indexOfLastPathSeparator) : null;
    }
 
    @Override
@@ -23,5 +32,14 @@ public abstract class BaseFileSystemModel {
          "Name: " + name + " - " +
          "Path: " + path + " - " +
          "Size: " + size;
+   }
+
+   public BaseFileSystemModel copy() {
+      BaseFileSystemModel clone = newInstance();
+      clone.setType(type);
+      clone.setName(name);
+      clone.setPath(path);
+      clone.setSize(size);
+      return clone;
    }
 }

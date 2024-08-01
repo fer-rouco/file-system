@@ -2,6 +2,7 @@ package com.valuelabs.filesystem.util;
 
 import com.valuelabs.filesystem.model.BaseFileSystemModel;
 import com.valuelabs.filesystem.model.FileSystemType;
+import com.valuelabs.filesystem.model.TextFile;
 import com.valuelabs.filesystem.util.strategy.*;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
@@ -41,12 +42,22 @@ public class FileSystemUtil {
             .stream()
             .mapToInt(BaseFileSystemModel::getSize)
             .sum();
-      return (getType(pathOfParent) == FileSystemType.ZIP_FILE) ? (sizeOfParent / 2) : sizeOfParent;
+
+      return switch (getType(pathOfParent)) {
+         case FileSystemType.TEXT_FILE -> ((TextFile) inMemoryFileSystem.get(pathOfParent)).size();
+         case FileSystemType.ZIP_FILE -> sizeOfParent / 2;
+         default -> sizeOfParent;
+      };
+   }
+
+   public void updateSize(BaseFileSystemModel entity) {
+      entity.setSize(calculateSize(entity.getPath()));
    }
 
    public void calculateAndUpdateSize(String... pathOfParent) {
       for (String path : pathOfParent) {
-         Optional.ofNullable(inMemoryFileSystem.get(path)).ifPresent(entity -> entity.setSize(calculateSize(path)));
+         Optional.ofNullable(inMemoryFileSystem.get(path)).ifPresent(this::updateSize);
+         getChildren(path).values().forEach(this::updateSize);
       }
    }
 
