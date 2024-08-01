@@ -25,7 +25,9 @@ public class FileSystemCreateTextFileStrategy extends FileSystemCreateStrategy {
 
    @Override
    public BaseFileSystemModel create(String name, String pathOfParent) {
-      return new TextFile();
+      TextFile textFile = new TextFile();
+      textFile.setSize(textFile.size());
+      return textFile;
    }
 
 }

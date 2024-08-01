@@ -27,4 +27,9 @@ public class FileSystemCreateZipFileStrategy extends FileSystemCreateStrategy {
    public BaseFileSystemModel create(String name, String pathOfParent) {
       return new ZipFile();
    }
+
+   @Override
+   public int calculateSize(String pathOfParent) {
+      return super.calculateSize(pathOfParent) / 2;
+   }
 }

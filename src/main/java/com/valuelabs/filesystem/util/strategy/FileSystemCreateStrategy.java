@@ -8,6 +8,7 @@ import com.valuelabs.filesystem.model.BaseFileSystemModel;
 import com.valuelabs.filesystem.util.FileSystemValidationHelper;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 public abstract class FileSystemCreateStrategy {
    protected final FileSystemValidationHelper fileSystemValidationHelper;
@@ -28,7 +29,19 @@ public abstract class FileSystemCreateStrategy {
       throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException, NonATextFileException {
 
       this.validate(name, pathOfParent);
-      return this.create(name, pathOfParent);
+      BaseFileSystemModel baseFileSystemModel = this.create(name, pathOfParent);
+      baseFileSystemModel.setSize(calculateSize(pathOfParent));
+
+      return baseFileSystemModel;
+   }
+
+   public int calculateSize(String pathOfParent) {
+      Map<String, BaseFileSystemModel> subMap = ((TreeMap<String, BaseFileSystemModel>) this.inMemoryFileSystem).tailMap(pathOfParent, false);
+      return subMap
+         .values()
+         .stream()
+         .mapToInt(BaseFileSystemModel::getSize)
+         .sum();
    }
 
 }

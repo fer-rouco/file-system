@@ -51,14 +51,11 @@ public class FileSystemService {
 
    public BaseFileSystemModel move(String sourcePath, String destinationPath)
       throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException, NonATextFileException {
-
       fileSystemValidationHelper.validatePathNotFound(sourcePath);
-
       BaseFileSystemModel entityToRemove = inMemoryFileSystem.get(sourcePath);
       BaseFileSystemModel newEntity = fileSystemFactory.create(entityToRemove.getType(), entityToRemove.getName(), destinationPath);
       this.inMemoryFileSystem.put(newEntity.getPath(), newEntity);
       inMemoryFileSystem.remove(sourcePath);
-
       return newEntity;
    }
 

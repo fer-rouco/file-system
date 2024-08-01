@@ -5,8 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 @SpringBootApplication
 public class FileSystemApplication {
@@ -17,7 +17,7 @@ public class FileSystemApplication {
 
 	@Bean
 	public Map<String, BaseFileSystemModel> inMemoryFileSystem() {
-		return new HashMap<>();
+		return new TreeMap<>();
 	}
 
 }
