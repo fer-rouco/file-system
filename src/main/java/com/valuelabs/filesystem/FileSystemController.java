@@ -28,8 +28,11 @@ public class FileSystemController {
    }
 
    @PostMapping
-   public BaseFileSystemModel create(@RequestParam FileSystemType type, @RequestParam String name, @RequestParam String pathOfParent)
-      throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
+   public BaseFileSystemModel create(
+      @RequestParam FileSystemType type,
+      @RequestParam String name,
+      @RequestParam String pathOfParent
+   ) throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {
       return fileSystemService.create(type, name, pathOfParent);
    }
 
@@ -50,34 +53,17 @@ public class FileSystemController {
       return fileSystemService.writeToFile(path, content);
    }
 
+   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+   @ExceptionHandler({
+      PathNotFoundException.class,
+      PathAlreadyExistsException.class,
+      IllegalFileSystemOperationException.class,
+      NonATextFileException.class
+   })
    public Map<String, String> handleException(Exception ex) {
       Map<String, String> errorResponse = new HashMap<>();
       errorResponse.put("message", ex.getMessage());
       return errorResponse;
-   }
-
-   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-   @ExceptionHandler(PathNotFoundException.class)
-   public Map<String, String> handlePathNotFoundException(Exception ex) {
-      return handleException(ex);
-   }
-
-   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-   @ExceptionHandler(PathAlreadyExistsException.class)
-   public Map<String, String> handlePathAlreadyExistsException(Exception ex) {
-      return handleException(ex);
-   }
-
-   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-   @ExceptionHandler(IllegalFileSystemOperationException.class)
-   public Map<String, String> handleIllegalFileSystemOperationException(Exception ex) {
-      return handleException(ex);
-   }
-
-   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-   @ExceptionHandler(NonATextFileException.class)
-   public Map<String, String> handleNonATextFileException(Exception ex) {
-      return handleException(ex);
    }
 
 }
