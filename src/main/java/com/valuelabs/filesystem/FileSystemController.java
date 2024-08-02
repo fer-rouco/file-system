@@ -41,6 +41,11 @@ public class FileSystemController {
       return fileSystemService.delete(path);
    }
 
+   @DeleteMapping(path = "clean")
+   public String cleanAll() {
+      return fileSystemService.cleanAll();
+   }
+
    @PostMapping(path = "/move")
    public BaseFileSystemModel move(@RequestParam String sourcePath, @RequestParam String destinationPath)
       throws PathNotFoundException, PathAlreadyExistsException, IllegalFileSystemOperationException {

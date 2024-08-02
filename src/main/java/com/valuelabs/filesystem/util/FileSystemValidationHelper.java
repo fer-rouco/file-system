@@ -32,7 +32,7 @@ public class FileSystemValidationHelper {
    }
 
    public void validatePathAlreadyExists(String name, String pathOfParent) throws PathAlreadyExistsException {
-      validatePathAlreadyExists(pathOfParent + "/" + name);
+      validatePathAlreadyExists(PathFormatter.buildPath(pathOfParent, name));
    }
 
    public void validateTextFileDoesNotContainAnyOtherEntity(String pathOfParent) throws IllegalFileSystemOperationException {
